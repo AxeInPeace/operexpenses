@@ -1,0 +1,32 @@
+<html>
+	{% include "includes.html" with title="Новая маршрутная карта" %}
+	<body>
+		{% include "header.html" %}
+		<div class="container">
+			<div class="row">
+				{% if message %}
+				<p>{{ message }}</p>
+				{% endif %}
+				<div>
+					<form method="post" action="{% url 'newstation' %}" name="newstation_form" class="form-inline">
+						<div class="form-group">
+							<input name="stationname" class="form-control" required="required" type="text" placeholder="Название станции"/>
+						</div>
+						<button class="btn submit">Добавить</button>
+						{% csrf_token %}
+					</form>
+				</div>
+
+				<div>
+					<table class="table">
+						<tr><th>Существующие типы станций</th></tr>
+					{% for station in stations %}
+						<tr><td>{{ station.name }}</td></tr>
+					{% endfor %}
+				</table>
+				</div>
+			</div>
+		</div>
+		{% include "footer.html" %}
+	</body>
+</html>

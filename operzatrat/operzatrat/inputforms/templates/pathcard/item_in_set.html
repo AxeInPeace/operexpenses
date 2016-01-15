@@ -1,0 +1,122 @@
+	<!--Вёрстка для создания типа работы, заданного пользователем -->
+<div class="hide adding-custom-wt">
+	<div class="form-container">
+		<div class="form-group">	
+			<label class="col-sm-3 control-label">Тип работы</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control"/>
+			</div>
+
+			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control qnt_ar {% if hard %} hide {% endif %}" value="1"/>
+			</div>	
+		
+			<div class="col-sm-2">
+				<label class="wt-description" data-toggle="tooltip" data-placement="top" title="{{ item.description }}">Описание</label>
+			</div>
+		</div>
+
+		<div class="form-group">	
+			<label class="col-sm-3 control-label">Время на один</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control time_ar" value=""/>
+			</div>
+			
+			<label class="col-sm-3 control-label">Итого времени</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control sum_time_ar" disabled/>
+			</div>
+
+			<div class="col-sm-2">
+				<button class="btn deletion" type="button">Удалить</button>
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+	<!--Внутри этого div'а находится часть вёрстки, предназначенная для реализации функции добавления нового типа работы-->
+
+<div class="hide adding_reserve">
+	<div class="form-container">
+		<div class="form-group">	
+			<label class="col-sm-3 control-label">Тип работы</label>
+			<div class="col-sm-2">
+				<select class="form-control">
+					{% for curitem in set %}
+					<option value="{{ curitem.id }}">{{ curitem }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control qnt_ar {% if hard %} hide {% endif %}" value="1"/>
+			</div>	
+		
+			<div class="col-sm-2">
+				<label class="wt-description" data-toggle="tooltip" data-placement="top" title="{{ item.description }}">Описание</label>
+			</div>
+		</div>
+
+		<div class="form-group">	
+			<label class="col-sm-3 control-label">Время на один</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control time_ar" value=""/>
+			</div>
+			
+			<label class="col-sm-3 control-label">Итого времени</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control sum_time_ar" disabled/>
+			</div>
+
+			<div class="col-sm-2">
+				<button class="btn deletion" type="button">Удалить</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% for item in set %}
+<div class="js-worktype">
+	<div class="form-container">
+		<div class="form-group">	
+			<label class="col-sm-3 control-label">Тип работы</label>
+			<div class="col-sm-2">
+				<select class="form-control wt-select">
+					{% for curitem in set %}
+					<option value="{{ curitem.id }}" {% if item == curitem %} selected="selected" {% endif %}>{{ curitem }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control qnt js-recalculate {% if hard %} hide {% endif %}" value="1"/>
+			</div>	
+			<div class="col-sm-2">
+				<label class="wt-description" data-toggle="tooltip" data-placement="top" title="{{ item.description }}">Описание</label>
+			</div>
+		</div>
+
+		<div class="form-group">	
+			<label class="col-sm-3 control-label">Время на один</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control time_value js-recalculate" value=""/>
+			</div>
+			
+			<label class="col-sm-3 control-label">Итого времени</label>
+			<div class="col-sm-2">
+				<input type="number" class="form-control time_sum" disabled/>
+			</div>
+
+			<div class="col-sm-2">
+				<button class="btn deletion" type="button">Удалить</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+<hr class="divider">

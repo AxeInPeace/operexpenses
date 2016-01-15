@@ -1,0 +1,41 @@
+.hide {
+	display:none;
+}
+
+.wrongInput{
+	box-shadow: 0px 0px 8px rgba(255, 0, 0, 1);
+}
+
+.input-footer {
+    padding-top: 40px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    color: #767676;
+    text-align: center;
+    border-top: 1px solid #E5E5E5;
+}
+
+.form-container {
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: 2px solid gray;
+}
+
+.success {
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	border: 2px solid green;
+}
+
+.warning {
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	border: 2px solid red;
+}

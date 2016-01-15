@@ -1,0 +1,16 @@
+<head>
+	{% include "includes.html" with title="Новый проект" %}
+</head>	
+<body>
+	{% include "header.html" %}
+	<div>
+	<ul>
+		<li><a href="{% url 'newproject' %}">Новый проект</a></li>
+		<li><a href="{% url 'newstation' %}">Новая станция</a></li>
+		<li><a href="{% url 'choose_station' %}">Новая маршрутная карта</a></li>
+		<li><a href="{% url 'order_choose_pathcard' %}">Выписать наряд</a></li>
+		<li><a href="{% url 'menu' %}">Вернуться на главную</a></li>
+	</ul>
+	</div>
+	{% include "footer.html" %}
+</body>

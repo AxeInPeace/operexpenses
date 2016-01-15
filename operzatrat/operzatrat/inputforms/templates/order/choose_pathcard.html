@@ -1,0 +1,58 @@
+<html>
+	{% include "includes.html" with title="Выбор маршрутной кары для наряда" %}
+	<body>
+		{% include "header.html" %}
+		{% if message %}
+		<p>{{ message }}</p>
+		{% endif %}
+
+		<div class="container">
+			<form method="get" action="{% url 'neworder' %}" class="form-horizontal">
+				<div class="form-group">
+					<label>Выберите проект</label>
+					<select class="js-project">
+						<option value="-1">Выберите проект</option>
+						{% for project in projects %}
+						<option value="{{ project.id }}">{{ project.name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="form-group hide pathcard">
+					<label>Выберите маршрутную карту</label>
+					<select class="js-pathcard" name="pathcard">
+
+					</select>
+				</div>
+
+				<button type="submit" class="btn">Выбрать маршрутную карту</button>
+			</form>
+		</div>
+		{% include "footer.html" %}
+	</body>
+	<script>
+		$(".js-project").change(function(){
+			var project_id = $(this).find(":selected").val();
+			$.get(
+				"{% url 'get_pathcards_for_order' %}",
+				{
+					project_id: project_id,
+				},
+				function(data){
+					if (data.amount == 0){
+						selector = $(".pathcard");
+						selector.addClass("hide");
+						selector.before("<p>В этом проекте ещё не заданны маршрутные карты.</p>");
+						return;
+					};
+
+					for(i = 0; i < data.amount; i++){
+						var option = document.createElement("option");
+						option.val(data.pathcard[i].id);
+						option.append(data.pathcard[i].station.station.name);
+						$(".js-pathcard").append(option);
+					}
+				});
+		});
+	</script>
+</html>

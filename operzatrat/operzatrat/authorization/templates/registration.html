@@ -1,0 +1,20 @@
+<html>
+	<head>
+	</head>	
+	<body>
+		{% if message %}
+		<p>{{ message }}</p>
+		{% endif %}
+
+		<form method="post" action="{% url 'registration' %}" id="reg_form">
+			<input id="username" name="username" required="required" type="text" placeholder="login"/><br>
+			<input id="username" name="email" required="required" type="email" placeholder="email@mail.com"/><br>
+			<input id="password" name="pass" required="required" type="password" placeholder="password" /><br>
+			<input id="password" name="confpass" required="required" type="password" placeholder="confirm pass" /><br>
+			<input type="submit" value="Registrate!"/>
+			{% csrf_token %}
+		</form>
+
+		<a href="/">Main menu</a>
+	</body>
+</html>

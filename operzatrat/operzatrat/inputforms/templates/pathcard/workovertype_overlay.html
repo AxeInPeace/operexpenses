@@ -1,0 +1,18 @@
+{% for key, value in overtypes.items %}
+<div class="form-container work-overtype">
+	<label class="control-label">{{ key }}</label>
+	{% include "pathcard/item_in_set.html" with set=value hard=hard %}
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label">Времени на операцию</label>
+		<div class="col-sm-2">
+			<input type="number" class="form-control oper_time" disabled/>
+		</div>
+		<div class="col-sm-5"></div>
+		<div class="col-sm-2">
+			<button class="btn adding" type="button">Добавить</button>
+		</div>
+	</div>
+
+</div>
+{% endfor %}

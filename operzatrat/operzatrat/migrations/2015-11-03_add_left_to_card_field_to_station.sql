@@ -1,0 +1,1 @@
+ALTER TABLE inputforms_station ADD COLUMN left_to_card bool NOT NULL;

@@ -1,0 +1,34 @@
+<div class="form-group">
+	<label>Выберите проект</label>
+	<select class="js-choose_project form-control" name="projectname" requried="required">
+		<option>Имя проекта</option>
+		{% for project in projects %}
+		<option value="{{ project.id }}" class="js-projectoption">
+			{{ project.name }}
+		</option>
+		{% endfor %}
+	</select>
+</div>
+
+<div class="form-group">
+	<label class="hide js-choose_station">Выберите станцию</label>
+	<select class="hide js-choose_station form-control" name="station">	
+		<option value="-1" selected="selected">Тип станции</option>
+		{% for station in stations %}
+			{% if station.left_to_card %}
+				<option class="js-station_option hide {{ station.project.id }}" value="{{ station.id }}">
+					{{ station.station }}
+				</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+</div>
+
+<script>
+	$("select.js-choose_project").change(function(){
+		$(".js-choose_station").removeClass('hide');
+		project_id = $(this).val();
+		$(".js-station_option").addClass('hide');
+		$("." + project_id + ".js-station_option").removeClass('hide');
+	});
+</script>

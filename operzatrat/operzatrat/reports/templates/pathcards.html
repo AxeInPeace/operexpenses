@@ -1,0 +1,39 @@
+<html>
+	{% include "includes.html" with title="Отчёт по маршрутным картам" %}
+	<body>
+		{% include "header.html" %}
+		<div class="container">
+			<div class="row">
+				{% if message %}
+				<p>{{ message }}</p>
+				{% endif %}
+
+				{% for pathcard in pathcards %}
+					<table class="table table-stripped">
+						<tr>
+							<th>Проект: {{ pathcard.station.project }}</th>
+							<th>Тип станции: {{ pathcard.station.station }}</th>
+						</tr>
+						<tr>
+							<th>Работа</th>
+							<th>Время на работу</th>
+							<th>Колчиество операций</th>
+							<th>Участок</th>
+						</tr>
+					{% for work in pathcard_works %}
+						{% if work.pathcard == pathcard %}
+						<tr>
+							<td>{{ work.work }}</td>
+							<td>{{ work.time }}</td>
+							<td>{{ work.quantity }}</td>
+							<td>{{ work.work.get_site_display }}</td>
+						</tr>
+						{% endif %}
+					{% endfor %}
+					</table>
+				{% endfor %}
+			</div>
+		</div>
+		{% include "footer.html" %}
+	</body>
+</html>

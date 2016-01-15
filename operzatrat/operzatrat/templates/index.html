@@ -1,0 +1,53 @@
+<html>
+	<head>
+		{% include "includes.html" with title="Главное меню" %}
+	</head>
+	<body>
+		{% include "header.html" %}
+		<div class="container">
+			<div class="row">				
+				{% if signin_error != None %}
+				<div>
+					<p>{{ signin_error }}</p>
+				</div>
+				{% endif %}
+				
+				{% if user.is_authenticated %}
+				<div>
+					<p>Welcome {{ user.username }}!</p>
+					<form method="get" action="{% url 'logout' %}">
+						<input type="submit" class="btn" value="Выход"/><br>
+					</form>
+				</div>
+				{% else %}
+				<div>
+					<form method="post" action="{% url 'login' %}" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Логин</label>
+							<div class="col-sm-3">
+								<input class="form-control" name="username" required="required" type="text"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Пароль</label>
+							<div class="col-sm-3">
+								<input class="form-control" name="pass" required="required" type="password"/>
+							</div>
+						</div>
+						<button type="submit" class="btn">Войти</button>
+						<button type="button" class="btn">
+							<a href="{% url 'registration' %}">
+								Registration
+							</a>
+						</button>
+
+						{% csrf_token %}
+					</form>
+				</div>	
+				{% endif %}
+			</div>
+		</div>
+		{% include "footer.html" %}
+	</body>
+</html>

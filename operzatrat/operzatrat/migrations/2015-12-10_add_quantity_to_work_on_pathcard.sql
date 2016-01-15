@@ -1,0 +1,1 @@
+ALTER TABLE inputforms_worksonpathcard ADD COLUMN quantity int;

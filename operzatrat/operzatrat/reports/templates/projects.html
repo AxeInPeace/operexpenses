@@ -1,0 +1,42 @@
+<html>
+	{% include "includes.html" with title="Проекты" %}
+	<body>
+		{% include "header.html" %}
+		<div class="container">
+			<div class="row">
+
+				{% if message %}
+				<p>{{ message }}</p>
+				{% endif %}
+
+				{% for project in projects %}
+					<table border="1">
+					  	<tr>
+							<th>{{ project.name }}</th>
+							<th>{{ project.start_date }}</th>
+							<th>{{ project.end_date }}</th>
+					  	</tr>
+					  </table>
+					  
+					  <table border="1">
+					  	<tr>
+					  		<th>Станция</th>
+					  		<th>Маршрутная карта</th>
+					  	</tr>
+					  	{% for station in stations %}
+					  		{% if station.project = project %}
+				  				<tr>
+				  					<td>{{ station.station.name }}</td>
+				  					<td>{% if station.left_to_card %} Не выписана {% else %} Уже выписана {% endif %}</td>
+				  				</tr>
+					  		{% endif %}
+					  	{% endfor %}  	
+					</table>
+					<hr>
+				{% endfor %}
+			</div>
+		</div>
+		
+		{% include "footer.html" %}
+	</body>
+</html>
