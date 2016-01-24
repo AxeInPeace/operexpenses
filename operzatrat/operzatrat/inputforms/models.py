@@ -52,10 +52,11 @@ class WorkType(models.Model):
 		return self.name
 
 	name = models.CharField(max_length=1023)
-	description = models.TextField()
+	description = models.TextField(blank=True, null=True)
 	stationType = models.ManyToManyField(StationType)
-	site = models.CharField(max_length=3, choices=SITES)
+	site = models.CharField(max_length=3, choices=SITES, blank=True, null=True)
 	owned_to = models.ForeignKey(WorkOvertype, blank=True, null=True, default=-1)
+	custom = models.BooleanField(default=False)
 
 
 class SiteType(models.Model):

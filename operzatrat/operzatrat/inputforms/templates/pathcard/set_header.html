@@ -18,6 +18,11 @@
 	</div>
 </div>
 
-<div class="form-group">	
-	<input class="form-control hide js-wt_counter" name="{{ field_name }}_form_counter" value="{{ set|length }}"/>
+<div class="form-group hide">	
+	<input class="form-control js-wt_counter" name="{{ field_name }}_form_counter" value="{{ set|length }}"/>
 </div>
+
+<div class="form-group hide">	
+	<input class="form-control js-custom-wt-counter" name="{{ field_name }}_custom_form_counter" value="0"/>
+</div>
+

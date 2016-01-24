@@ -83,8 +83,13 @@ def forms_station(request):
 
 
 def choose_project(request):
-	projects = Project.objects.all()
-	stations = Station.objects.all()
+	
+	stations = Station.objects.filter(left_to_card=True)
+	projects = []
+	for station in stations:
+		if station.project not in projects:
+			projects.append(station.project)
+
 	context = {
 		"projects": projects,
 		"stations": stations,
@@ -105,21 +110,32 @@ def fill_dict(s):
 
 def init_worktypes(request):
 	wt_amount = int(request.POST.get('wt_amount'))
-	print wt_amount
+	custom_wt_amount = int(request.POST.get('custom_wt_amount'))
 
 	returned_value = {
 		"work_type": None, 
-		"quantity": None, 
+		"quantity": None,
 		"time": None,
 	}
 	returned_value["work_type"] = []
 	returned_value["quantity"] = []
 	returned_value["time"] = []
+	returned_value["custom_work_type"] = []
 
 	for i in range(wt_amount):
 		returned_value["work_type"].append( int( request.POST.get('wt_' + str(i)) ) )
 		returned_value["quantity"].append( int( request.POST.get('qnt_' + str(i)) ) )
 		returned_value["time"].append( int( request.POST.get('time_' + str(i)) ) )
+
+	for i in range(wt_amount, wt_amount + custom_wt_amount):
+		owner_id = request.POST.get('overtype_' + str(i))
+		owner = WorkOvertype.objects.get(id=owner_id)
+		curwt = WorkType.objects.create(name=request.POST.get('wt_'+ str(i)), custom=True, owned_to=owner)
+
+		returned_value["work_type"].append(curwt.id)
+		returned_value["quantity"].append( int( request.POST.get('qnt_' + str(i)) ) )
+		returned_value["time"].append( int( request.POST.get('time_' + str(i)) ) )
+
 	return returned_value
 
 
@@ -137,7 +153,8 @@ def forms_pathcard(request):
 			}
 			return render(request, 'newpathcard.html', context)
 
-		sets = WorkType.objects.filter(stationType=choosen_station.station)
+		sets = WorkType.objects.filter(stationType=choosen_station.station).filter(custom=False)
+
 		KKP_set = sets.filter(site='KKP')
 		door_set = sets.filter(site='DUR')
 		ventil_set = sets.filter(site='VNT')
@@ -147,6 +164,7 @@ def forms_pathcard(request):
 		GRB_set = sets.filter(site='GRB')
 
 		types = SiteType.objects.all()
+
 		KKP_type = types.filter(site='KKP')
 		door_type = types.filter(site='DUR')
 		ventil_type = types.filter(site='VNT')
@@ -188,17 +206,14 @@ def forms_pathcard(request):
 		}
 		return render(request, 'newpathcard2.html', context)
 	
-	if request.method == "POST":		
+	if request.method == "POST":
 		station_id = request.POST.get('station')
 		station = Station.objects.get(id=station_id)
-		print station
 
 		station.left_to_card = False
-		station.save()
 		cur_pathcard = Pathcard.objects.create(station=station)
 
 		posted_set = init_worktypes(request)
-		print posted_set
 		
 		wt_amount = int(request.POST.get('wt_amount'))
 		for i in range(wt_amount):
@@ -210,6 +225,8 @@ def forms_pathcard(request):
 		context = {
 			"success_message": "Маршрутная карта успешно добавлена",
 		}
+
+		station.save()
 		return render(request, 'newpathcard2.html', context)
 
 
@@ -230,13 +247,13 @@ def get_time(request):
 
 	return JsonResponse({'data':return_data})
 
+
 def get_description(request):
 	wt_id = request.GET.get('item_id')
 	worktype = WorkType.objects.get(id=wt_id)
 
 	return_data = worktype.description
 	return JsonResponse({'data':return_data})
-
 
 
 def forms_order(request):
@@ -250,11 +267,13 @@ def forms_order(request):
 
 		return render(request, 'neworder.html', context)
 
+
 def order_choose_pathcard(request):
 	context = {
 		"projects": Project.objects.all(),
 	}
 	return render(request, 'order/choose_pathcard.html', context)
+
 
 def get_pathcards_for_order(request):
 	project_id = request.GET.get('project_id')
