@@ -1,15 +1,15 @@
 	<!--Вёрстка для добавления кастомного овертипа-->
-<div class=" form-container form-container-warning custom-work-overtype-reserve">
+<div class="hide form-container form-container-warning custom-work-overtype-reserve">
 	<div class="form-group">
 		<div class="col-sm-4">
-			<input type="text" class="form-control"/>
+			<input type="text" class="form-control custom-overtype-input"/>
 		</div>
 		<div class="col-sm-1"></div>
 		<div class="col-sm-5">
-			<label class="control-label">Here will be label</label>
+			<label class="control-label custom-overtype-label"></label>
 		</div>
 	</div>
-
+	{% include "pathcard/item_in_set.html" with set=None hard=hard overtype=None %}
 	<div class="form-group">
 		<label class="col-sm-3 control-label">Времени на операцию</label>
 		<div class="col-sm-2">
@@ -43,3 +43,4 @@
 
 </div>
 {% endfor %}
+<hr class="oper-divider">

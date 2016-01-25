@@ -76,6 +76,10 @@
 							<input class="form-control custom_wt_amount" name="custom_wt_amount"/>
 						</div>
 
+						<div class="form-group hide">
+							<input class="form-control custom_wot_amount" name="custom_wot_amount"/>
+						</div>
+
 						<button class="btn submit">Назначить маршрутную карту</button>
 						{% csrf_token %}
 					</form>				
@@ -139,7 +143,7 @@ $(".js-recalculate").on('change', recalculate);
 $(document).ready($(".js-recalculate").trigger("change"));
 
 function local_recalculate(cur_tab){
-	cur_tab.find(".work-overtype").each(function(){
+	cur_tab.find(".work-overtype, .custom-work-overtype").each(function(){
 		var local_sum = 0;
 		$(this).find(".js-worktype, .js-custom-worktype").each(function(){
 			var cur_time = parseInt($(this).find(".time_sum").val());
@@ -206,7 +210,8 @@ $(".adding").click(function(){
 	$(added_block.find(".js-recalculate")).trigger('change');
 });
 
-$(".custom-adding").click(function(){
+
+var custom_adding_function = function(){
 	cur_tab = $(this).parents(".tab-pane");
 	cur_block = $(this).parents(".form-container")
 
@@ -232,7 +237,28 @@ $(".custom-adding").click(function(){
 	added_block.find(".js-recalculate").on('change', recalculate);
 	
 	$(added_block.find(".js-recalculate")).trigger('change');
-});	
+};	
+
+$(".custom-adding").click(custom_adding_function);
+
+$(".custom-adding-oper").click(function(){
+	cur_tab = $(this).parents(".tab-pane");
+
+	var to_clone = cur_tab.find(".custom-work-overtype-reserve").clone();
+	to_clone.addClass("custom-work-overtype").removeClass("hide custom-work-overtype-reserve");
+	to_clone.find(".oper_time_reserve").addClass("oper_time").removeClass("oper_time_reserve");
+
+	cur_tab.find(".oper-divider").before(to_clone);
+
+	var added_block = cur_tab.find(".custom-work-overtype").last();
+
+	added_block.find(".custom-adding").on('click', custom_adding_function);
+	added_block.find(".custom-overtype-input").on('input', function(){
+		string_to_label = $(this).val();
+		$(this).parents(".custom-work-overtype").find(".custom-overtype-label").html(string_to_label);
+	})
+
+});
 
 var update_time = function(){ 
 	cur_tab = $(this).parents(".tab-pane");
@@ -285,7 +311,6 @@ $(".wt-select").change(update_time);
 $(".wt-select").change(update_description);
 
 $(".submit").click(function(){
-	alert("submit");
 	amount_of_wt = 0;
 	$(".newpathcard_form").find(".js-worktype").each(function(){
 		cur_num = String(amount_of_wt);
@@ -295,10 +320,8 @@ $(".submit").click(function(){
 		amount_of_wt++;
 	});
 	$(".newpathcard_form").find(".wt_amount").val(amount_of_wt);
-	alert(amount_of_wt);
 	amount_of_custom_wt = 0;
 	$(".newpathcard_form").find(".js-custom-worktype").each(function(){
-		alert("in");
 		cur_num = String(amount_of_wt);
 		$(this).find(".wt-input").attr("name", "wt_" + cur_num);
 		$(this).find(".qnt").attr("name", "qnt_" + cur_num);
