@@ -2,7 +2,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label">Тип оборудования</label>
 		<div class="col-sm-3">
-			<select class="form-control tool-type js-recalculate" name="{{ field_name }}_type">
+			<select class="form-control tool-type" name="{{ field_name }}_type">
 				<option selected>Выберите тип оборудования</option>
 				{% for type in types %}
 				<option value="{{ type.id }}">{{ type.name }}</option>
@@ -17,12 +17,3 @@
 		{% endif %}
 	</div>
 </div>
-
-<div class="form-group hide">	
-	<input class="form-control js-wt_counter" name="{{ field_name }}_form_counter" value="{{ set|length }}"/>
-</div>
-
-<div class="form-group hide">	
-	<input class="form-control js-custom-wt-counter" name="{{ field_name }}_custom_form_counter" value="0"/>
-</div>
-

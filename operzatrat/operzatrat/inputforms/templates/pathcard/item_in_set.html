@@ -1,35 +1,33 @@
 	<!--Вёрстка для создания типа работы, заданного пользователем -->
-<div class="hide adding-custom-wt">
+<div class="hide adding_reserve_custom">
 	<div class="form-container form-container-warning">
 		<div class="form-group">
-			<div class="hide">
-				<input type="text" class="form-control custom-wt-overtype" name="" value="{{ overtype.id }}"/>
-			</div>
+			<input type="text" class="hide form-control custom-wt-owner" name="" {% if overtype == None %} value="custom" {% else %} value="{{ overtype.id }}" {% endif %}/>
 
 			<label class="col-sm-3 control-label">Тип работы</label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control custom"/>
+				<input type="text" class="form-control wt-input"/>
 			</div>
 
 			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control qnt_ar {% if hard %} hide {% endif %}" value="1"/>
+				<input type="number" class="form-control qnt_reserve {% if hard %} hide {% endif %}" value="1"/>
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label class="col-sm-3 control-label">Время на один</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control time_ar" value=""/>
+				<input type="number" class="form-control time_reserve custom" value=""/>
 			</div>
 			
 			<label class="col-sm-3 control-label">Итого времени</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control sum_time_ar" disabled/>
+				<input type="number" class="form-control sum_time_reserve" disabled/>
 			</div>
 
 			<div class="col-sm-2">
-				<button class="btn custom-deletion" type="button">Удалить</button>
+				<button class="btn deletion" type="button">Удалить</button>
 			</div>
 		</div>
 	</div>
@@ -43,7 +41,7 @@
 		<div class="form-group">	
 			<label class="col-sm-3 control-label">Тип работы</label>
 			<div class="col-sm-2">
-				<select class="form-control">
+				<select class="form-control wt-select">
 					{% for curitem in set %}
 					<option value="{{ curitem.id }}">{{ curitem }}</option>
 					{% endfor %}
@@ -52,7 +50,7 @@
 
 			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control qnt_ar {% if hard %} hide {% endif %}" value="1"/>
+				<input type="number" class="form-control qnt_reserve {% if hard %} hide {% endif %}" value="1"/>
 			</div>	
 		
 			<div class="col-sm-2">
@@ -63,12 +61,12 @@
 		<div class="form-group">	
 			<label class="col-sm-3 control-label">Время на один</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control time_ar" value=""/>
+				<input type="number" class="form-control time_reserve" value=""/>
 			</div>
 			
 			<label class="col-sm-3 control-label">Итого времени</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control sum_time_ar" disabled/>
+				<input type="number" class="form-control sum_time_reserve" disabled/>
 			</div>
 
 			<div class="col-sm-2">
@@ -80,7 +78,7 @@
 
 
 {% for item in set %}
-<div class="js-worktype">
+<div class="worktype">
 	<div class="form-container">
 		<div class="form-group">	
 			<label class="col-sm-3 control-label">Тип работы</label>

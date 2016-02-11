@@ -116,11 +116,11 @@ def init_worktypes(request):
 		"work_type": None, 
 		"quantity": None,
 		"time": None,
+
 	}
 	returned_value["work_type"] = []
 	returned_value["quantity"] = []
 	returned_value["time"] = []
-	returned_value["custom_work_type"] = []
 
 	for i in range(wt_amount):
 		returned_value["work_type"].append( int( request.POST.get('wt_' + str(i)) ) )
@@ -128,7 +128,7 @@ def init_worktypes(request):
 		returned_value["time"].append( int( request.POST.get('time_' + str(i)) ) )
 
 	for i in range(wt_amount, wt_amount + custom_wt_amount):
-		owner_id = request.POST.get('overtype_' + str(i))
+		owner_id = request.POST.get('owner_' + str(i))
 		owner = WorkOvertype.objects.get(id=owner_id)
 		curwt = WorkType.objects.create(name=request.POST.get('wt_'+ str(i)), custom=True, owned_to=owner)
 
@@ -207,16 +207,16 @@ def forms_pathcard(request):
 		return render(request, 'newpathcard2.html', context)
 	
 	if request.method == "POST":
+		posted_set = init_worktypes(request)
 		station_id = request.POST.get('station')
 		station = Station.objects.get(id=station_id)
 
 		station.left_to_card = False
 		cur_pathcard = Pathcard.objects.create(station=station)
-
-		posted_set = init_worktypes(request)
 		
 		wt_amount = int(request.POST.get('wt_amount'))
-		for i in range(wt_amount):
+		custom_wt_amount = int(request.POST.get('custom_wt_amount'))
+		for i in range(wt_amount + custom_wt_amount):
 			cur_work = WorkType.objects.get(id=posted_set["work_type"][i])
 			cur_time = posted_set["time"][i]
 			cur_qnt =  posted_set["quantity"][i]
@@ -234,7 +234,6 @@ def get_time(request):
 	site_type_id = request.GET.get('tool_id')
 	cur_site_type = SiteType.objects.get(id=site_type_id)
 	work_types = request.GET.getlist('work_types[]')
-
 	return_data = []
 	times = TimeForWork.objects.all()
 	for item in work_types:
@@ -244,16 +243,21 @@ def get_time(request):
 			return_data.append(cur_time.time)
 		except:
 			return_data.append(0)
-
 	return JsonResponse({'data':return_data})
 
 
 def get_description(request):
 	wt_id = request.GET.get('item_id')
 	worktype = WorkType.objects.get(id=wt_id)
-
 	return_data = worktype.description
 	return JsonResponse({'data':return_data})
+
+
+def create_overtype(request):
+	name = request.GET.get('overtype')
+	overtype = WorkOvertype.objects.create(name=name)
+	return_id = overtype.id
+	return JsonResponse({'id': return_id})
 
 
 def forms_order(request):

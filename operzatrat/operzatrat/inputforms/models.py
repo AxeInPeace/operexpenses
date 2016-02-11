@@ -45,7 +45,7 @@ class WorkOvertype(models.Model):
 		return self.name
 
 	name = models.CharField(max_length=1023)
-
+	#custom = models.BooleanField(default=False)
 
 class WorkType(models.Model):
 	def __unicode__(self):

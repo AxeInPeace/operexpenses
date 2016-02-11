@@ -22,7 +22,7 @@
 						</tr>
 					{% for work in pathcard_works %}
 						{% if work.pathcard == pathcard %}
-						<tr>
+						<tr {% if work.work.custom %} class="warning" {% endif %}>
 							<td>{{ work.work }}</td>
 							<td>{{ work.time }}</td>
 							<td>{{ work.quantity }}</td>
