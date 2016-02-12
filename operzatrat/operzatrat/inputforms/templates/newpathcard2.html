@@ -40,15 +40,15 @@
 
 						<div class="tab-content">
 								<div role="tabpanel" class="tab-pane active" id="kkp">
-									{% include "pathcard/agregator.html" with input_types=KKP_type input_field_name="KKP" input_set=KKP_set input_hard=False input_overtypes=overtype_KKP %}
+									{% include "pathcard/agregator.html" with input_types=KKP_type input_field_name="KKP" input_set=KKP_set input_overtypes=overtype_KKP %}
 								</div>
 
 								<div role="tabpanel" class="tab-pane" id="door">
-									{% include "pathcard/agregator.html" with input_types=door_type input_field_name="door" input_set=door_set input_hard=False input_overtypes=None %}
+									{% include "pathcard/agregator.html" with input_types=door_type input_field_name="door" input_set=door_set input_overtypes=None %}
 								</div>
 
 								<div role="tabpanel" class="tab-pane" id="ventilation">
-									{% include "pathcard/agregator.html" with input_types=ventil_type input_field_name="ventil" input_set=ventil_set input_hard=True input_overtypes=None %}
+									{% include "pathcard/agregator.html" with input_types=ventil_type input_field_name="ventil" input_set=ventil_set input_overtypes=None %}
 								</div>
 
 								<div role="tabpanel" class="tab-pane" id="equip_installation">
@@ -297,25 +297,9 @@ $(".tool-type").change(update_time);
 $(".wt-select").change(update_time);
 $(".wt-select").change(update_description);
 
-var create_overtype = function(){
-	var overtype_name = $(this).find(".custom-overtype-input").val()
-	var get_id = 0;
-	$.when($.get(
-		"{% url 'create_overtype' %}",
-		{
-			overtype: overtype_name,
-		},
-		function(data){
-			get_id = data.id;
-		}
-	));
-	$(this).find(".worktype_custom").each(function(){
-		$(this).find(".custom-wt-owner").val(get_id);
-	});
-};
 //=================================SUBMIT SETTINGS===========================
 $(".submit").click(function(){
-	amount_of_wt = 0;
+	var amount_of_wt = 0;
 	$(".newpathcard_form").find(".worktype").each(function(){
 		cur_num = String(amount_of_wt);
 		$(this).find(".wt-select").attr("name", "wt_" + cur_num);
@@ -325,7 +309,17 @@ $(".submit").click(function(){
 	});
 	$(".newpathcard_form").find(".wt_amount").val(amount_of_wt);
 	
-	$(".custom-work-overtype").each(create_overtype);
+	var amount_of_wot = 0;
+	$(".custom-work-overtype").each(function(){
+		cur_num = String(amount_of_wot);
+		alert(cur_num);
+		$(this).find(".custom-overtype-input").attr("name", "custom_ot_" + cur_num);
+		$(this).find(".custom-wt-owner").each(function(){
+			$(this).val(-cur_num);
+		});
+		amount_of_wot++;
+	});
+	$(".newpathcard_form").find(".custom_wot_amount").val(amount_of_wot);
 
 	var amount_of_custom_wt = 0;
 	$(".newpathcard_form").find(".worktype_custom").each(function(){

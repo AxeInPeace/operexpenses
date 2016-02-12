@@ -108,7 +108,7 @@ def fill_dict(s):
 	return d
 
 
-def init_worktypes(request):
+def init_worktypes(request, custom_wot):
 	wt_amount = int(request.POST.get('wt_amount'))
 	custom_wt_amount = int(request.POST.get('custom_wt_amount'))
 
@@ -127,14 +127,22 @@ def init_worktypes(request):
 		returned_value["quantity"].append( int( request.POST.get('qnt_' + str(i)) ) )
 		returned_value["time"].append( int( request.POST.get('time_' + str(i)) ) )
 
+
 	for i in range(wt_amount, wt_amount + custom_wt_amount):
-		owner_id = request.POST.get('owner_' + str(i))
-		owner = WorkOvertype.objects.get(id=owner_id)
+		owner_id = int(request.POST.get('owner_' + str(i)))
+		print owner_id
+		#negative and 0 means that owner is custom overtype
+		if (owner_id <= 0):
+			owner = custom_wot[-owner_id]
+		else:
+			owner = WorkOvertype.objects.get(id=owner_id)
 		curwt = WorkType.objects.create(name=request.POST.get('wt_'+ str(i)), custom=True, owned_to=owner)
 
 		returned_value["work_type"].append(curwt.id)
 		returned_value["quantity"].append( int( request.POST.get('qnt_' + str(i)) ) )
 		returned_value["time"].append( int( request.POST.get('time_' + str(i)) ) )
+
+	print "custom WT OK"
 
 	return returned_value
 
@@ -207,11 +215,31 @@ def forms_pathcard(request):
 		return render(request, 'newpathcard2.html', context)
 	
 	if request.method == "POST":
-		posted_set = init_worktypes(request)
-		station_id = request.POST.get('station')
-		station = Station.objects.get(id=station_id)
+		try:
+			overtypes = init_overtypes(request)
+		except:
+			context = {
+				"warning_message": "Операции не были созданы",
+			}
+			return render(request, 'newpathcard2.html', context)
+		
+		try:
+			posted_set = init_worktypes(request, overtypes)
+		except:
+			context = {
+				"warning_message": "Работы не были проинициализированны",
+			}
+			return render(request, 'newpathcard2.html', context)
 
-		station.left_to_card = False
+		try:
+			station_id = request.POST.get('station')
+			station = Station.objects.get(id=station_id)
+		except:
+			context = {
+				"warning_message": "Маршрутная карта не добавлена",
+			}
+			return render(request, 'newpathcard2.html', context)
+			
 		cur_pathcard = Pathcard.objects.create(station=station)
 		
 		wt_amount = int(request.POST.get('wt_amount'))
@@ -222,6 +250,7 @@ def forms_pathcard(request):
 			cur_qnt =  posted_set["quantity"][i]
 			WorksOnPathcard.objects.create(work=cur_work,pathcard=cur_pathcard,time=cur_time, quantity=cur_qnt)
 		
+		station.left_to_card = False
 		context = {
 			"success_message": "Маршрутная карта успешно добавлена",
 		}
@@ -253,11 +282,14 @@ def get_description(request):
 	return JsonResponse({'data':return_data})
 
 
-def create_overtype(request):
-	name = request.GET.get('overtype')
-	overtype = WorkOvertype.objects.create(name=name)
-	return_id = overtype.id
-	return JsonResponse({'id': return_id})
+def init_overtypes(request):
+	amount = int(request.POST.get('custom_wot_amount'))
+	overtypes = []
+	for i in range(amount):
+		name = request.POST.get('custom_ot_' + str(i))
+		overtype = WorkOvertype.objects.create(name=name)
+		overtypes.append(overtype)
+	return overtypes
 
 
 def forms_order(request):
