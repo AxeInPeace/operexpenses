@@ -2,16 +2,16 @@
 <div class="hide adding_reserve_custom">
 	<div class="form-container form-container-warning">
 		<div class="form-group">
-			<input type="text" class="hide form-control custom-wt-owner" name="" {% if overtype == None %} value="custom" {% else %} value="{{ overtype.id }}" {% endif %}/>
+			<input type="text" class="hide form-control custom-wt-owner" name="" {% if overtype == None %} value="None" {% else %} value="{{ overtype.id }}" {% endif %}/>
 
 			<label class="col-sm-3 control-label">Тип работы</label>
 			<div class="col-sm-2">
 				<input type="text" class="form-control wt-input"/>
 			</div>
 
-			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
+			<label class="col-sm-3 control-label">Количество</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control qnt_reserve {% if hard %} hide {% endif %}" value="1"/>
+				<input type="number" class="form-control qnt_reserve" value="1"/>
 			</div>
 		</div>
 
@@ -48,9 +48,9 @@
 				</select>
 			</div>
 
-			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
+			<label class="col-sm-3 control-label">Количество</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control qnt_reserve {% if hard %} hide {% endif %}" value="1"/>
+				<input type="number" class="form-control qnt_reserve" value="1"/>
 			</div>	
 		
 			<div class="col-sm-2">
@@ -90,9 +90,9 @@
 				</select>
 			</div>
 
-			<label class="col-sm-3 control-label {% if hard %} hide {% endif %}">Количество</label>
+			<label class="col-sm-3 control-label">Количество</label>
 			<div class="col-sm-2">
-				<input type="number" class="form-control qnt js-recalculate {% if hard %} hide {% endif %}" value="1"/>
+				<input type="number" class="form-control qnt js-recalculate" value="1"/>
 			</div>	
 			<div class="col-sm-2">
 				<label class="wt-description" data-toggle="tooltip" data-placement="top" title="{{ item.description }}">Описание</label>

@@ -1,11 +1,9 @@
-{% include "pathcard/set_header.html" with types=input_types field_name=input_field_name hard=input_hard set=input_set%}
+{% include "pathcard/set_header.html" with types=input_types field_name=input_field_name set=input_set%}
 
 {% if input_overtypes == None %}
-	<div class="form-container">
-		{% include "pathcard/item_in_set.html" with set=input_set hard=input_hard %}
-	</div>
+	{% include "pathcard/objects_overlay.html" with set=input_set %}
 {% else %}
-	{% include "pathcard/workovertype_overlay.html" with set=input_set overtypes=input_overtypes hard=input_hard %}
+	{% include "pathcard/workovertype_overlay.html" with set=input_set overtypes=input_overtypes %}
 {% endif %}
 
-{% include "pathcard/set_footer.html" %}
+{% include "pathcard/set_footer.html" with overtypes=input_overtypes %}

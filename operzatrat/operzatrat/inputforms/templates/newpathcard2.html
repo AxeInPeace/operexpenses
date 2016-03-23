@@ -39,33 +39,33 @@
 						</div>
 
 						<div class="tab-content">
-								<div role="tabpanel" class="tab-pane active" id="kkp">
-									{% include "pathcard/agregator.html" with input_types=KKP_type input_field_name="KKP" input_set=KKP_set input_overtypes=overtype_KKP %}
-								</div>
+							<div role="tabpanel" class="tab-pane active" id="kkp">
+								{% include "pathcard/agregator.html" with input_types=KKP_type input_field_name="KKP" input_set=KKP_set input_overtypes=overtype_KKP %}
+							</div>
 
-								<div role="tabpanel" class="tab-pane" id="door">
-									{% include "pathcard/agregator.html" with input_types=door_type input_field_name="door" input_set=door_set input_overtypes=None %}
-								</div>
+							<div role="tabpanel" class="tab-pane" id="door">
+								{% include "pathcard/agregator.html" with input_types=door_type input_field_name="door" input_set=door_set input_overtypes=None %}
+							</div>
 
-								<div role="tabpanel" class="tab-pane" id="ventilation">
-									{% include "pathcard/agregator.html" with input_types=ventil_type input_field_name="ventil" input_set=ventil_set input_overtypes=None %}
-								</div>
+							<div role="tabpanel" class="tab-pane" id="ventilation">
+								{% include "pathcard/agregator.html" with input_types=ventil_type input_field_name="ventil" input_set=ventil_set input_overtypes=None %}
+							</div>
 
-								<div role="tabpanel" class="tab-pane" id="equip_installation">
-									{% include "pathcard/agregator.html" with input_types=equip_type input_field_name="equip" input_set=equip_set input_hard=False input_overtypes=overtype_equip %}
-								</div>
-						
-								<div role="tabpanel" class="tab-pane" id="electro_installation">
-									{% include "pathcard/agregator.html" with input_types=electro_type input_field_name="electro" input_set=electro_set input_hard=False input_overtypes=overtype_electro %}
-								</div>
-						
-								<div role="tabpanel" class="tab-pane" id="pipe_tie">
-									{% include "pathcard/agregator.html" with input_types=pipe_type input_field_name="pipe" input_set=pipe_set input_hard=False input_overtypes=overtype_pipe %}
-								</div>
+							<div role="tabpanel" class="tab-pane" id="equip_installation">
+								{% include "pathcard/agregator.html" with input_types=equip_type input_field_name="equip" input_set=equip_set input_overtypes=overtype_equip %}
+							</div>
+					
+							<div role="tabpanel" class="tab-pane" id="electro_installation">
+								{% include "pathcard/agregator.html" with input_types=electro_type input_field_name="electro" input_set=electro_set input_overtypes=overtype_electro %}
+							</div>
+					
+							<div role="tabpanel" class="tab-pane" id="pipe_tie">
+								{% include "pathcard/agregator.html" with input_types=pipe_type input_field_name="pipe" input_set=pipe_set input_overtypes=overtype_pipe %}
+							</div>
 
-								<div role="tabpanel" class="tab-pane" id="grb">
-									{% include "pathcard/agregator.html" with input_types=GRB_type input_field_name="GRB" input_set=GRB_set input_hard=True input_overtypes=overtype_GRB %}
-								</div>
+							<div role="tabpanel" class="tab-pane" id="grb">
+								{% include "pathcard/agregator.html" with input_types=GRB_type input_field_name="GRB" input_set=GRB_set input_overtypes=overtype_GRB %}
+							</div>
 						</div>
 
 						<div class="form-group hide">	
@@ -80,7 +80,18 @@
 							<input class="form-control custom_wot_amount" name="custom_wot_amount"/>
 						</div>
 
-						<button class="btn submit">Назначить маршрутную карту</button>
+						<div class="form-group hide">
+							<input class="form-control save_flag" name="save_flag"/>
+						</div>
+						<hr>
+						<div class="form-group">
+							<div class="col-sm-3">
+								<button class="btn submit">Назначить маршрутную карту</button>
+							</div>
+
+							<div class="col-sm-5"></div>
+							<button class="btn save">Сохранить маршрутную карту</button>
+						</div>
 						{% csrf_token %}
 					</form>				
 				</div>
@@ -221,16 +232,6 @@ function global_recalculate(cur_tab){
 	cur_tab.find($(".time_tab")).val(global_sum);
 };
 
-//????Нужен ли?
-$(".js-global_qnt").on('change', function(){
-	cur_val = $(this).val();
-	cur_tab = $(this).parents(".tab-pane");
-	cur_tab.find(".qnt").each(function(){
-		$(this).val(cur_val);
-	});
-	global_recalculate(cur_tab);
-});
-
 $(".js-recalculate").change(all_recalculate);
 $(document).ready($(".js-recalculate").trigger("change"));
 
@@ -298,7 +299,7 @@ $(".wt-select").change(update_time);
 $(".wt-select").change(update_description);
 
 //=================================SUBMIT SETTINGS===========================
-$(".submit").click(function(){
+function set_names_of_fields(){
 	var amount_of_wt = 0;
 	$(".newpathcard_form").find(".worktype").each(function(){
 		cur_num = String(amount_of_wt);
@@ -331,8 +332,21 @@ $(".submit").click(function(){
 		amount_of_custom_wt++;
 	});
 	$(".newpathcard_form").find(".custom_wt_amount").val(amount_of_custom_wt);
+};
+
+$(".submit").click(function(){
+	$(".save_flag").val("False");
+	set_names_of_fields();
 });
 
+$(".save").click(function(){
+	$(".save_flag").val("True");
+	set_names_of_fields();
+	$(".newpathcard_form").ajaxSubmit({
+		url: '{% url "save_pathcard" %}',
+		type: 'post',
+	})
+})
 //prevent from submit by pressing Enter
 $(document).ready(function() {
 	$(window).keydown(function(event){

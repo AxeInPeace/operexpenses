@@ -152,8 +152,11 @@ def forms_pathcard(request):
 		try:
 			choosen_station = Station.objects.get(id=request.GET.get('station'))
 		except:
-			projects = Project.objects.all()
-			stations = Station.objects.all()
+			stations = Station.objects.filter(left_to_card=True)
+			projects = []
+			for station in stations:
+				if station.project not in projects:
+					projects.append(station.project)
 			context = {
 				"projects": projects,
 				"stations": stations,
@@ -239,8 +242,14 @@ def forms_pathcard(request):
 				"warning_message": "Маршрутная карта не добавлена",
 			}
 			return render(request, 'newpathcard2.html', context)
-			
-		cur_pathcard = Pathcard.objects.create(station=station)
+		
+		try:
+			try:
+				cur_pathcard = Pathcard.objects.get(station=station)	
+			except Pathcard.DoesNotExist:
+				cur_pathcard = Pathcard.objects.create(station=station)
+		except:
+			print "Could not find or create pathcard"
 		
 		wt_amount = int(request.POST.get('wt_amount'))
 		custom_wt_amount = int(request.POST.get('custom_wt_amount'))
@@ -254,7 +263,6 @@ def forms_pathcard(request):
 		context = {
 			"success_message": "Маршрутная карта успешно добавлена",
 		}
-
 		station.save()
 		return render(request, 'newpathcard2.html', context)
 

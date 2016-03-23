@@ -9,7 +9,7 @@
 			<label class="control-label custom-overtype-label"></label>
 		</div>
 	</div>
-	{% include "pathcard/item_in_set.html" with set=None hard=hard overtype=None %}
+	{% include "pathcard/item_in_set.html" with set=None overtype=None %}
 	<div class="form-group">
 		<label class="col-sm-3 control-label">Времени на операцию</label>
 		<div class="col-sm-2">
@@ -25,7 +25,7 @@
 {% for key, value in overtypes.items %}
 <div class="form-container work-overtype">
 	<label class="control-label">{{ key }}</label>
-	{% include "pathcard/item_in_set.html" with set=value hard=hard overtype=key %}
+	{% include "pathcard/item_in_set.html" with set=value overtype=key %}
 
 	<div class="form-group">
 		<label class="col-sm-3 control-label">Времени на операцию</label>
