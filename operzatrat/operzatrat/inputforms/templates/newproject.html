@@ -1,12 +1,8 @@
-<!--
-TODO:
-1) Сделать так, чтобы по обновлению страницы скрпт работал
--->
 <html>
 	<head>
 		{% include "includes.html" with title="Новый проект" %}
 		{% load static from staticfiles %}
-		<script type="text/javascript" src="{% static "calendar_ru.js" %}"></script>
+		<script type="text/javascript" src="{% static 'calendar_ru.js' %}"></script>
 	</head>	
 	<body>
 		{% include "header.html" %}

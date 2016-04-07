@@ -1,18 +1,8 @@
-<html>
-	{% include "includes.html" with title="Новая маршрутная карта" %}
-	<body>
-		{% include "header.html" %}
-		{% if message %}
-		<p>{{ message }}</p>
-		{% endif %}
-
-		<div class="container">
-			<form method="get" action="{% url 'newpathcard' %}" class="form-horizontal">
-				{% include "pathcard/project_station.html"%}
-				<button type="submit" class="btn">Задать маршрутную карту</button>
-			</form>
-		</div>
-		{% include "footer.html" %}
-	</body>
-	
-</html>
+{% extends "typical_template.html" %}
+{% block title %}Новая маршрутная карта{% endblock %}
+{% block content %}
+<form method="get" action="{% url 'newpathcard' %}" class="form-horizontal">
+	{% include "pathcard/project_station.html"%}
+	<button type="submit" class="btn">Задать маршрутную карту</button>
+</form>
+{% endblock %}

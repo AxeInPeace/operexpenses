@@ -5,6 +5,10 @@
 	</div>
 	<div class="col-sm-2"></div>
 	<div class="col-sm-3">
-		<button class="btn btn-warning custom-adding-oper" type="button">{% if overtypes == None %}Добавить объект{% else %}Добавить свою операцию{% endif %}</button>
+		{% if overtypes == None %}
+			<button class="btn btn-warning custom-adding-object" type="button">Добавить объект</button>
+		{% else %}
+			<button class="btn btn-warning custom-adding-oper" type="button">Добавить свою операцию</button>
+		{% endif %}
 	</div>
 </div>

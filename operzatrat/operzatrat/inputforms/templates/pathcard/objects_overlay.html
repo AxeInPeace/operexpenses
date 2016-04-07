@@ -1,8 +1,58 @@
 	<!--Вёрстка для добавления нового объекта-->
-<div class="form-container hide custom-work-overtype-reserve">
-	{% include "pathcard/item_in_set.html" with set=set %}
+<div class="form-container hide custom-object-reserve">
+	{% include "pathcard/item_in_set.html" with set=set overtype=None site=site object=True %}
 
 	<div class="form-group">
+		<input type="text" class="form-control hide site" value="{{ site }}"/>
+		<label class="col-sm-3 control-label">Времени на объект</label>
+		<div class="col-sm-2">
+			<input type="number" class="form-control oper_time_reserve" disabled/>
+		</div>
+		
+		<div class="col-sm-3">
+			<button class="btn btn-warning custom-adding" type="button">Добавить свой тип</button>
+		</div>
+		<div class="col-sm-2">
+			<button class="btn adding" type="button">Добавить существующий</button>
+		</div>
+		<div class="col-sm-2">
+			<button class="btn delete-object" type="button">Удалить объект</button>
+		</div>
+	</div>
+</div>
+
+{% if choosen_works %}
+	{% for custom_overtype, custom_worktypes in choosen_works.items %}
+	{% if custom_overtype.site == site %}
+		<div class="form-container custom-work-overtype">
+
+			{% include "pathcard/item_in_set.html" with set=set overtype=custom_overtype choosen=custom_worktypes edit="True" site=site %}
+			<div class="form-group">
+				<input type="text" class="form-control hide site" value="{{ site }}"/>
+				<label class="col-sm-3 control-label">Времени на объект</label>
+				<div class="col-sm-2">
+					<input type="number" class="form-control oper_time" disabled/>
+				</div>
+
+				<div class="col-sm-3">
+					<button class="btn btn-warning custom-adding" type="button">Добавить свой тип</button>
+				</div>
+				<div class="col-sm-2">
+					<button class="btn adding" type="button">Добавить существующий</button>
+				</div>
+				<div class="col-sm-2">
+					<button class="btn delete-object" type="button">Удалить объект</button>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	{% endfor %}
+{% else %}
+<div class="form-container custom-work-overtype">
+	{% include "pathcard/item_in_set.html" with set=set overtype=None site=site %}
+
+	<div class="form-group">
+		<input type="text" class="form-control hide site" value="{{ site }}"/>
 		<label class="col-sm-3 control-label">Времени на объект</label>
 		<div class="col-sm-2">
 			<input type="number" class="form-control oper_time" disabled/>
@@ -11,28 +61,13 @@
 		<div class="col-sm-3">
 			<button class="btn btn-warning custom-adding" type="button">Добавить свой тип</button>
 		</div>
-		<div class="col-sm-3">
-			<button class="btn adding" type="button">Добавить существующий</button>
-		</div>
-	</div>
-</div>
-
-<div class="form-container work-overtype">
-	{% include "pathcard/item_in_set.html" with set=set overtype=None %}
-
-	<div class="form-group">
-		<label class="col-sm-3 control-label">Времени на объект</label>
 		<div class="col-sm-2">
-			<input type="number" class="form-control oper_time" disabled/>
-		</div>
-		
-		<div class="col-sm-3">
-			<button class="btn btn-warning custom-adding" type="button">Добавить свой тип</button>
-		</div>
-		<div class="col-sm-3">
 			<button class="btn adding" type="button">Добавить существующий</button>
+		</div>
+		<div class="col-sm-2">
+			<button class="btn delete-object" type="button">Удалить объект</button>
 		</div>
 	</div>
 </div>
-
+{% endif %}
 <hr class="oper-divider">

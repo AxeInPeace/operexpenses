@@ -1,39 +1,96 @@
-<html>
-	{% include "includes.html" with title="Отчёт по маршрутным картам" %}
-	<body>
-		{% include "header.html" %}
-		<div class="container">
-			<div class="row">
-				{% if message %}
-				<p>{{ message }}</p>
-				{% endif %}
+{% extends "typical_template.html" %}
+{% block title %}Маршрутная карта{% endblock %}
 
-				{% for pathcard in pathcards %}
-					<table class="table table-stripped">
-						<tr>
-							<th>Проект: {{ pathcard.station.project }}</th>
-							<th>Тип станции: {{ pathcard.station.station }}</th>
-						</tr>
-						<tr>
-							<th>Работа</th>
-							<th>Время на работу</th>
-							<th>Колчиество операций</th>
-							<th>Участок</th>
-						</tr>
-					{% for work in pathcard_works %}
-						{% if work.pathcard == pathcard %}
-						<tr {% if work.work.custom %} class="warning" {% endif %}>
-							<td>{{ work.work }}</td>
-							<td>{{ work.time }}</td>
-							<td>{{ work.quantity }}</td>
-							<td>{{ work.work.get_site_display }}</td>
-						</tr>
+{% block content %}
+	<div class="form-group">
+		<label class="col-sm-3 control-label">Маршрутная карта</label>
+		<select class="form-control pc-select" name="pathcard">
+			<option selected="selected">Выберите маршрутную карту</option>
+			{% for item in pathcards %}
+				<option value="{{ item.id }}">{{ item }}</option>
+			{% endfor %}
+		</select>
+
+	</div>
+
+	{% for pathcard in pathcards %}
+		<table class="table table-stripped pathcard_{{ pathcard.id }} hide">
+			<tr>
+				<th>Проект: {{ pathcard.station.project }}</th>
+				<th>Тип станции: {{ pathcard.station.station }}</th>
+			</tr>
+			<!-- Free space --> <tr><th></th></tr>
+			<!-- Free space --> <tr><th></th></tr>
+			{% for cur_pathcard, cur_sites in sites.items %}
+			{% if cur_pathcard == pathcard %}
+			{% for site in cur_sites %}
+				<tr>
+					<th>Участок: {{ site.site }}</th>
+					<th>Тип оборудования: {{ site.name }}</th>
+				</tr>
+				{% for wo_pathcard, cur_workovertypes in workovertypes.items %}
+					{% if wo_pathcard == pathcard %}
+
+					{% for workovertype in cur_workovertypes %}
+					{% if workovertype.site == site.site %}
+					<tr>
+						<th>{{ workovertype.name }}</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th></th>
+						<th>Работа</th>
+						<th>Времени на работу</th>
+						<th>Колчиество</th>
+						<th>Сумма времени по работе</th>
+					</tr>
+					{% for w_pathcard, cur_work in works.items %}
+					{% if w_pathcard == pathcard %}
+					{% for work in cur_work %}
+						{% if work.work.owned_to == workovertype %}
+							<tr {% if work.work.custom %} class="" {% endif %}>
+								<th></th>
+								<td>{{ work.work.name }}</td>
+								<td>{{ work.time }}</td>
+								<td>{{ work.quantity }}</td>
+								<td class="worktype-time"></td>
+							</tr>
 						{% endif %}
 					{% endfor %}
-					</table>
+					{% endif %}
+					{% endfor %}
+					<tr>
+						<th>Время на операцию:</th>
+						<td class="overtype-time"></td>
+					</tr>
+					<!-- Free space --> <tr><th></th></tr>
+					{% endif %}
+					{% endfor %}
+					{% endif %}
 				{% endfor %}
-			</div>
-		</div>
-		{% include "footer.html" %}
-	</body>
-</html>
+				<tr>
+					<th>Итого времени на участке</th>
+					<td class="site-time"></td>
+				</tr>
+				<!-- Free space --> <tr><th></th></tr>
+			{% endfor %}
+			{% endif %}
+			{% endfor %}
+		</table>
+	{% endfor %}
+
+<script>
+	//alert("script");
+	$(".pc-select").change(function(){
+		//alert("in");
+		project_id = $(this).val();
+		//alert(project_id);
+		$(".table").addClass('hide');
+		$(".pathcard_" + project_id).removeClass('hide');
+	});
+</script>
+
+{% endblock %}

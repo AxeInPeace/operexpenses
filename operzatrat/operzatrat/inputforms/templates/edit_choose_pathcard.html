@@ -1,0 +1,19 @@
+{% extends "typical_template.html" %}
+{% block title %}Редактировать маршрутную карту{% endblock %}
+{% block content %}
+<form method="get" action="{% url 'edit_pathcard' %}" class="form-horizontal">
+	<div class="form-group">
+		<label>Выберите маршрутную карту</label>
+		<select class="form-control" name="pathcard" requried="required">
+			<option>Маршрутная карта</option>
+			{% for pathcard in pathcards %}
+			<option value="{{ pathcard.id }}">
+				{{ pathcard.station.station.name }} в проекте {{ pathcard.station.project.name }}
+			</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<button type="submit" class="btn">Редактировать маршрутную карту</button>
+</form>
+{% endblock %}

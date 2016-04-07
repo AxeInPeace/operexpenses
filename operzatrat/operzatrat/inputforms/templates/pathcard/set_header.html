@@ -3,17 +3,13 @@
 		<label class="col-sm-2 control-label">Тип оборудования</label>
 		<div class="col-sm-3">
 			<select class="form-control tool-type" name="{{ field_name }}_type">
-				<option selected>Выберите тип оборудования</option>
+				{% if not choosen_works %}
+					<option selected="selected">Выберите оборудование</option>
+				{% endif %}
 				{% for type in types %}
-				<option value="{{ type.id }}">{{ type.name }}</option>
+					<option value="{{ type.id }}" {% if type == choosen_type %} selected="selected" {% endif %}>{{ type.name }}</option>
 				{% endfor %}
 			</select>
 		</div>
-		{% if hard %}
-		<label class="col-sm-2 control-label">Количество</label>
-		<div class="col-sm-3">
-			<input type="number" class="form-control js-global_qnt" value="1"/>
-		</div>	
-		{% endif %}
 	</div>
 </div>

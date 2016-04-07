@@ -1,0 +1,8 @@
+{% extends "typical_template.html" %}
+{% block title %}Новая маршрутная карта{% endblock %}
+{% block content %}
+<ul>
+	<li><a href="{% url 'edit_choose_pathcard' %}">Редактировать маршрутную карту</a></li>
+	<li><a href="{% url 'menu' %}">Вернуться на главную</a></li>
+</ul>
+{% endblock %}

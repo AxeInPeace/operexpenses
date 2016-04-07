@@ -36,11 +36,11 @@
 							</div>
 						</div>
 						<button type="submit" class="btn">Войти</button>
-						<button type="button" class="btn">
-							<a href="{% url 'registration' %}">
-								Registration
-							</a>
-						</button>
+						<a href="{% url 'registration' %}">
+							<button type="button" class="btn">
+								Регистрация
+							</button>
+						</a>
 
 						{% csrf_token %}
 					</form>

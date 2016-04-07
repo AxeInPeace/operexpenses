@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^auth/', include('operzatrat.authorization.urls')),
     url(r'^forms/', include('operzatrat.inputforms.urls')),
+    url(r'^edit/', include('operzatrat.inputforms.urls')),
     url(r'^reports/', include('operzatrat.reports.urls')),
     url(r'^$', menuview.index, name='menu'),
 ]

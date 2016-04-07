@@ -1,9 +1,9 @@
-{% include "pathcard/set_header.html" with types=input_types field_name=input_field_name set=input_set%}
+{% include "pathcard/set_header.html" with types=input_types field_name=input_field_name set=input_set choosen_type=choosen_type site=site %}
 
 {% if input_overtypes == None %}
-	{% include "pathcard/objects_overlay.html" with set=input_set %}
+	{% include "pathcard/objects_overlay.html" with set=input_set site=site choosen_works=choosen_works %}
 {% else %}
-	{% include "pathcard/workovertype_overlay.html" with set=input_set overtypes=input_overtypes %}
+	{% include "pathcard/workovertype_overlay.html" with set=input_set overtypes=input_overtypes site=site choosen_works=choosen_works %}
 {% endif %}
 
 {% include "pathcard/set_footer.html" with overtypes=input_overtypes %}

@@ -1,5 +1,6 @@
 {% extends "typical_template.html" %}
 {% block title %}Новая маршрутная карта{% endblock %}
+
 {% block content %}
 
 <ul class="nav nav-tabs" role="tablist">
@@ -34,31 +35,31 @@
 
 	<div class="tab-content">
 		<div role="tabpanel" class="tab-pane active" id="kkp">
-			{% include "pathcard/agregator.html" with input_types=KKP_type input_field_name="KKP" input_set=KKP_set input_overtypes=overtype_KKP site="KKP" %}
+			{% include "pathcard/agregator.html" with input_types=KKP_type input_field_name="KKP" input_set=KKP_set input_overtypes=overtype_KKP site="KKP" choosen_works=choosen_works choosen_type=cur_pathcard.kkp_site_type %}
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="door">
-			{% include "pathcard/agregator.html" with input_types=door_type input_field_name="door" input_set=door_set input_overtypes=None site="DUR" %}
+			{% include "pathcard/agregator.html" with input_types=door_type input_field_name="door" input_set=door_set input_overtypes=overtype_door site="DUR" choosen_works=choosen_works choosen_type=cur_pathcard.door_site_type %}
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="ventilation">
-			{% include "pathcard/agregator.html" with input_types=ventil_type input_field_name="ventil" input_set=ventil_set input_overtypes=None site="VNT" %}
+			{% include "pathcard/agregator.html" with input_types=ventil_type input_field_name="ventil" input_set=ventil_set input_overtypes=overtype_ventil site="VNT" choosen_works=choosen_works choosen_type=cur_pathcard.ventil_site_type %}
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="equip_installation">
-			{% include "pathcard/agregator.html" with input_types=equip_type input_field_name="equip" input_set=equip_set input_overtypes=overtype_equip site="EQI" %}
+			{% include "pathcard/agregator.html" with input_types=equip_type input_field_name="equip" input_set=equip_set input_overtypes=overtype_equip choosen_works=choosen_works site="EQI" choosen_type=cur_pathcard.eqi_site_type %}
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="electro_installation">
-			{% include "pathcard/agregator.html" with input_types=electro_type input_field_name="electro" input_set=electro_set input_overtypes=overtype_electro site="ELI" %}
+			{% include "pathcard/agregator.html" with input_types=electro_type input_field_name="electro" input_set=electro_set input_overtypes=overtype_electro choosen_works=choosen_works site="ELI" choosen_type=cur_pathcard.eli_site_type %}
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="pipe_tie">
-			{% include "pathcard/agregator.html" with input_types=pipe_type input_field_name="pipe" input_set=pipe_set input_overtypes=overtype_pipe site="PIP" %}
+			{% include "pathcard/agregator.html" with input_types=pipe_type input_field_name="pipe" input_set=pipe_set input_overtypes=overtype_pipe choosen_works=choosen_works site="PIP" choosen_type=cur_pathcard.pipe_site_type %}
 		</div>
 
 		<div role="tabpanel" class="tab-pane" id="grb">
-			{% include "pathcard/agregator.html" with input_types=GRB_type input_field_name="GRB" input_set=GRB_set input_overtypes=overtype_GRB site="GRB" %}
+			{% include "pathcard/agregator.html" with input_types=GRB_type input_field_name="GRB" input_set=GRB_set input_overtypes=overtype_GRB choosen_works=choosen_works site="GRB" choosen_type=cur_pathcard.grb_site_type %}
 		</div>
 	</div>
 
@@ -91,8 +92,8 @@
 <!--
 	{#% load static from staticfiles %#}
 	<script type="text/javascript" src="{#% static "pathcard_script.js" %#}"></script>
--->
 
+-->
 <script>
 //======================================DELETION===========================
 var deletion = function(me, class_to_delete) {
@@ -111,6 +112,7 @@ var custom_deletion = function() {
 };
 
 $(".deletion").click(default_deletion);
+$(".custom-deletion").click(custom_deletion);
 
 
 //======================================ADDING===========================
@@ -183,7 +185,7 @@ $(".custom-adding-object").click(function(){
 	cur_tab = $(this).parents(".tab-pane");
 
 	var to_clone = cur_tab.find(".custom-object-reserve").clone();
-	to_clone.addClass("work-overtype").removeClass("hide custom-object-reserve");
+	to_clone.addClass("custom-work-overtype").removeClass("hide custom-object-reserve");
 	to_clone.find(".oper_time_reserve").addClass("oper_time").removeClass("oper_time_reserve");
 
 	cur_tab.find(".oper-divider").before(to_clone);
@@ -220,7 +222,7 @@ var all_recalculate = function(){
 var recalculate_worktype = function(worktype) {
 	var qnt = parseInt(worktype.find(".qnt").val());
 	if (isNaN(qnt)) qnt=0;
-	var value = parseInt(worktype.find(".time_value").val());
+	var value = parseFloat(worktype.find(".time_value").val());
 	if (isNaN(value)) value = 0;
 
 	worktype.find(".time_sum").val( qnt * value );
@@ -229,7 +231,7 @@ var recalculate_worktype = function(worktype) {
 function local_recalculate(cur_overtype){
 	var local_sum = 0;
 	cur_overtype.find(".worktype, .worktype_custom").each(function(){
-		var cur_time = parseInt($(this).find(".time_sum").val());
+		var cur_time = parseFloat($(this).find(".time_sum").val());
 		if (isNaN(cur_time))
 			cur_time = 0;
 		local_sum += cur_time;
@@ -240,7 +242,7 @@ function local_recalculate(cur_overtype){
 function global_recalculate(cur_tab){
 	global_sum = 0;
 	cur_tab.find(".oper_time").each(function(){
-		var cur_time = parseInt($(this).val());
+		var cur_time = parseFloat($(this).val());
 		if (isNaN(cur_time))
 			cur_time = 0;
 		global_sum += cur_time;
@@ -250,6 +252,15 @@ function global_recalculate(cur_tab){
 
 $(".js-recalculate").change(all_recalculate);
 $(document).ready($(".js-recalculate").trigger("change"));
+
+$(document).ready($(".custom-overtype-input").each(function(){
+	$(this).on('input', function(){
+		string_to_label = $(this).val();
+		$(this).parents(".custom-work-overtype").find(".custom-overtype-label").html(string_to_label);
+	});
+	$(this).trigger("input");
+}));
+
 
 
 //===============================AJAX FUNCTIONS==================================
@@ -309,7 +320,10 @@ $(function () {
 $(".tool-type").change(update_all_time);
 $(".wt-select").change(update_time);
 $(".wt-select").change(update_description);
-$(document).ready($(".tool-type").trigger("change"));
+$(document).ready(
+	$(".wt-select").each(update_description)
+);
+//$(document).ready($(".tool-type").trigger("change"));
 
 //=================================SUBMIT SETTINGS===========================
 function set_names_of_fields(){
@@ -331,6 +345,7 @@ function set_names_of_fields(){
 		$(this).find(".custom-wt-owner").each(function(){
 			$(this).val(-cur_num);
 		});
+		$(this).find(".site").attr("name", "overtype_site_" + cur_num);
 		amount_of_wot++;
 	});
 	$(".newpathcard_form").find(".custom_wot_amount").val(amount_of_wot);
