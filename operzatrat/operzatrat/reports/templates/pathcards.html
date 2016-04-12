@@ -19,78 +19,117 @@
 				<th>Проект: {{ pathcard.station.project }}</th>
 				<th>Тип станции: {{ pathcard.station.station }}</th>
 			</tr>
-			<!-- Free space --> <tr><th></th></tr>
-			<!-- Free space --> <tr><th></th></tr>
+			<!-- Free space --> <tr><th></th><th></th><th></th><th></th><th></th></tr>
+			<!-- Free space --> <tr><th></th><th></th><th></th><th></th><th></th></tr>
 			{% for cur_pathcard, cur_sites in sites.items %}
-			{% if cur_pathcard == pathcard %}
-			{% for site in cur_sites %}
-				<tr>
-					<th>Участок: {{ site.site }}</th>
-					<th>Тип оборудования: {{ site.name }}</th>
-				</tr>
-				{% for wo_pathcard, cur_workovertypes in workovertypes.items %}
-					{% if wo_pathcard == pathcard %}
-
-					{% for workovertype in cur_workovertypes %}
-					{% if workovertype.site == site.site %}
-					<tr>
-						<th>{{ workovertype.name }}</th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-					</tr>
-					<tr>
-						<th></th>
-						<th>Работа</th>
-						<th>Времени на работу</th>
-						<th>Колчиество</th>
-						<th>Сумма времени по работе</th>
-					</tr>
-					{% for w_pathcard, cur_work in works.items %}
-					{% if w_pathcard == pathcard %}
-					{% for work in cur_work %}
-						{% if work.work.owned_to == workovertype %}
-							<tr {% if work.work.custom %} class="" {% endif %}>
-								<th></th>
-								<td>{{ work.work.name }}</td>
-								<td>{{ work.time }}</td>
-								<td>{{ work.quantity }}</td>
-								<td class="worktype-time"></td>
+				{% if cur_pathcard == pathcard %}
+					{% for site in cur_sites %}
+						<tr>
+							<th>Участок: {{ site.site }}</th>
+							<th>Тип оборудования: {{ site.name }}</th>
+						</tr>
+						<tbody class="site-block">
+							{% for wo_pathcard, cur_workovertypes in workovertypes.items %}
+								{% if wo_pathcard == pathcard %}
+									{% for workovertype in cur_workovertypes %}
+										{% if workovertype.site == site.site %}
+											<tbody class="overtype-block">
+												<tr {% if workovertype.custom %} class="danger" {% endif %}>
+													<th>{{ workovertype.name }}</th>
+													<th></th>
+													<th></th>
+													<th></th>
+													<th></th>
+												</tr>
+												<tr>
+													<th></th>
+													<th>Работа</th>
+													<th>Времени на работу</th>
+													<th>Колчиество</th>
+													<th>Сумма времени по работе</th>
+												</tr>
+												{% for w_pathcard, cur_work in works.items %}
+												{% if w_pathcard == pathcard %}
+												{% for work in cur_work %}
+													{% if work.work.owned_to == workovertype %}
+														<tr {% if work.work.custom %} class="danger" {% endif %}>
+															<th></th>
+															<td>{{ work.work.description }}</td>
+															<td class="t">{{ work.time }}</td>
+															<td class="q">{{ work.quantity }}</td>
+															<td class="worktype-time"></td>
+														</tr>
+													{% endif %}
+												{% endfor %}
+												{% endif %}
+												{% endfor %}
+												<tr>
+													<th>Время на операцию:</th>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td class="overtype-time"></td>
+												</tr>
+												<!-- Free space --> <tr><th></th><th></th><th></th><th></th><th></th></tr>
+											</tbody>
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							{% endfor %}
+							<tr class="success">
+								<th>Итого времени на участке</th>
+								<td></td>
+								<td></td>
+								<td></td>
+								<th class="site-time"></th>
 							</tr>
-						{% endif %}
+						</tbody>
+
+						<!-- Free space --> <tr><th></th><th></th><th></th><th></th><th></th></tr>
 					{% endfor %}
-					{% endif %}
-					{% endfor %}
-					<tr>
-						<th>Время на операцию:</th>
-						<td class="overtype-time"></td>
-					</tr>
-					<!-- Free space --> <tr><th></th></tr>
-					{% endif %}
-					{% endfor %}
-					{% endif %}
-				{% endfor %}
-				<tr>
-					<th>Итого времени на участке</th>
-					<td class="site-time"></td>
-				</tr>
-				<!-- Free space --> <tr><th></th></tr>
-			{% endfor %}
-			{% endif %}
+				{% endif %}
 			{% endfor %}
 		</table>
 	{% endfor %}
 
 <script>
-	//alert("script");
+
 	$(".pc-select").change(function(){
-		//alert("in");
 		project_id = $(this).val();
-		//alert(project_id);
 		$(".table").addClass('hide');
 		$(".pathcard_" + project_id).removeClass('hide');
+		$(".pathcard_" + project_id).find(".worktype-time").each(worktype_calculate);
+		$(".pathcard_" + project_id).find(".overtype-time").each(overtype_calculate);
+		$(".pathcard_" + project_id).find(".site-time").each(global_calculate);
 	});
+
+	var worktype_calculate = function(){
+		row = $(this).parents("tr");
+		quantity = parseInt(row.find(".q").html());
+		time = parseFloat(row.find(".t").html());
+		total_time = quantity * time;
+		row.find(".worktype-time").html(total_time);
+
+	}
+
+	var overtype_calculate = function(){
+		var overtype = $(this).parents(".overtype-block");
+		cur_sum = 0;
+		overtype.find(".worktype-time").each(function(){
+			cur_sum += parseFloat($(this).html());
+		});
+		$(this).html(cur_sum);
+	}
+
+	var global_calculate = function(){
+		var site = $(this).parents(".site-block");
+		cur_sum = 0;
+		site.find(".worktype-time").each(function(){
+			cur_sum += parseFloat($(this).html());
+		});
+		$(this).html(cur_sum);
+	}
+
 </script>
 
 {% endblock %}
